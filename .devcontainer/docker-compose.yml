@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  # PHP Application
+  php:
+    build:
+      context: .
+    container_name: playground_phpwebsocket
+    volumes:
+      - ../:/app:delegated
+    privileged: true
+    
