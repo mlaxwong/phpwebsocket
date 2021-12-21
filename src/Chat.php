@@ -9,18 +9,20 @@ use SplObjectStorage;
 
 class Chat implements MessageComponentInterface
 {
+    protected $mem;
     protected $clients;
 
     public function __construct()
     {
         $this->clients = new SplObjectStorage;
+        $this->mem = memory_get_usage();
     }
 
     public function onOpen(ConnectionInterface $conn)
     {
         $this->clients->attach($conn);
         $conn->send("{$conn->resourceId} connected");
-        echo "New connection! ({$conn->resourceId})\n";
+        $this->print("New connection! ({$conn->resourceId})\n");
     }
 
     public function onMessage(ConnectionInterface $from, $msg)
@@ -39,5 +41,12 @@ class Chat implements MessageComponentInterface
     {
         echo "An error has occurred: {$e->getMessage()}\n";
         $conn->close();
+    }
+
+    private function print(string $message)
+    {
+        $memoryUsage = memory_get_usage() - $this->mem;
+        $totalClient = count($this->clients);
+        echo "$message >> TOTAL CLIENT : $totalClient >> MEMORY USAGE : $memoryUsage\n";
     }
 }

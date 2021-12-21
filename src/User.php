@@ -2,9 +2,16 @@
 
 namespace App;
 
-class User
+use App\Contracts\Auth\IdentityContract;
+
+class User implements IdentityContract
 {
     public function __construct(
-        public string $name
+        protected string $name
     ) {}
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
 }
