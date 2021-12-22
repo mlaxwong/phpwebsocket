@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Foudation\Application;
 use App\Foudation\ServiceProvider;
+use DI\Container;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -17,25 +18,25 @@ class ServiceProviderTest extends TestCase
         $serviceProvider->tryToBoot();
     }
 
-    // public function testBootInjection()
-    // {
-    //     $cat = new ServiceProviderTestCat();
+    public function testBootInjection()
+    {
+        $cat = new ServiceProviderTestCat();
 
-    //     $container = new Container();
-    //     $container->set(ServiceProviderTestCat::class, $cat);
+        $app = new Application();
+        $app->set(ServiceProviderTestCat::class, $cat);
 
-    //     $serviceProvider = new class ($container) extends ServiceProvider  {
-    //         public static mixed $injected = null;
-    //         public function boot(ServiceProviderTestCat $cat, string | null $test = null) {
-    //             self::$injected = $cat;
-    //         }
-    //     };
+        $serviceProvider = new class ($app) extends ServiceProvider  {
+            public static mixed $injected = null;
+            public function boot(ServiceProviderTestCat $cat, string | null $test = null) {
+                self::$injected = $cat;
+            }
+        };
 
-    //     $this->assertNull($serviceProvider::$injected);
+        $this->assertNull($serviceProvider::$injected);
 
-    //     $serviceProvider->tryToBoot();
-    //     $this->assertSame($cat, $serviceProvider::$injected);
-    // }
+        $serviceProvider->tryToBoot();
+        $this->assertSame($cat, $serviceProvider::$injected);
+    }
 }
 
 
@@ -44,5 +45,13 @@ class ServiceProviderTestCat
     public function cry(): string
     {
         return 'meow~~~';
+    }
+}
+
+class ServiceProviderTestDog
+{
+    public function cry(): string
+    {
+        return 'wofff!!!';
     }
 }

@@ -31,7 +31,7 @@ class ServiceProvider implements Containerable
     public function tryToBoot(): void
     {
         if (method_exists($this, 'boot')) {
-            $this->call([$this, 'boot']);
+            $this->app->call([$this, 'boot']);
         }
     }
 }
